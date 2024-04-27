@@ -4,6 +4,4 @@ import { Component } from '@angular/core';
   selector: 'app-root',
   templateUrl: './app.component.html',
 })
-export class AppComponent {
-  title = 'parcial-1-misw-4104';
-}
+export class AppComponent {}
