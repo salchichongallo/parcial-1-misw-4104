@@ -13,7 +13,6 @@ describe('CoffeeListComponent', () => {
 
   beforeEach(async () => {
     coffeesService = jasmine.createSpyObj('CoffeesService', ['getCoffees']);
-    coffeesService.getCoffees.and.returnValue(of([]));
 
     await TestBed.configureTestingModule({
       declarations: [CoffeeListComponent],
@@ -29,6 +28,7 @@ describe('CoffeeListComponent', () => {
   });
 
   it('should render header table', () => {
+    coffeesService.getCoffees.and.returnValue(of([]));
     fixture.detectChanges();
     const [numeral, title, type, region] = fixture.debugElement.queryAll(
       By.css('th'),
@@ -51,5 +51,21 @@ describe('CoffeeListComponent', () => {
     expect(name.nativeElement.textContent).toBe(coffee.nombre);
     expect(type.nativeElement.textContent).toBe(coffee.tipo);
     expect(region.nativeElement.textContent).toBe(coffee.region);
+  });
+
+  it('should render a list of coffee', () => {
+    const coffees = [buildCoffee(), buildCoffee(), buildCoffee()];
+    coffeesService.getCoffees.and.returnValue(of(coffees));
+    fixture.detectChanges();
+
+    const rows = fixture.debugElement.queryAll(By.css('tbody tr'));
+    rows.forEach((row, index) => {
+      const coffee = coffees[index];
+      const [numeral, name, type, region] = row.queryAll(By.css('td'));
+      expect(numeral?.nativeElement.textContent).toBe((index + 1).toString());
+      expect(name?.nativeElement.textContent).toBe(coffee.nombre);
+      expect(type?.nativeElement.textContent).toBe(coffee.tipo);
+      expect(region?.nativeElement.textContent).toBe(coffee.region);
+    });
   });
 });
