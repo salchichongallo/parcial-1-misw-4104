@@ -1,5 +1,6 @@
 {
   "private": true,
+  "license": "MIT",
   "name": "parcial-1-misw-4104",
   "version": "0.1.0",
   "scripts": {
