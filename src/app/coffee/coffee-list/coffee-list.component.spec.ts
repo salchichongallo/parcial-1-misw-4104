@@ -1,7 +1,9 @@
 import { of } from 'rxjs';
+import { faker } from '@faker-js/faker';
 import { By } from '@angular/platform-browser';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { CoffeeType } from '../coffee';
 import { buildCoffee } from '../coffee.fixtures';
 import { CoffeesService } from '../coffees.service';
 
@@ -67,5 +69,33 @@ describe('CoffeeListComponent', () => {
       expect(type?.nativeElement.textContent).toBe(coffee.tipo);
       expect(region?.nativeElement.textContent).toBe(coffee.region);
     });
+  });
+
+  it(`should count the amount of 'Blend' coffee in the list`, () => {
+    const totalCoffees = faker.number.int({ min: 0, max: 20 });
+    const coffees = new Array(totalCoffees)
+      .fill(null)
+      .map(() => buildCoffee({ type: CoffeeType.blend }));
+
+    coffeesService.getCoffees.and.returnValue(of(coffees));
+
+    fixture.detectChanges();
+    const element = fixture.debugElement.query(By.css('#blend-coffee'));
+
+    expect(element.nativeElement.textContent).toBe(totalCoffees.toString());
+  });
+
+  it(`should count the amount of 'Café de Origen' coffee in the list`, () => {
+    const totalCoffees = faker.number.int({ min: 0, max: 20 });
+    const coffees = new Array(totalCoffees)
+      .fill(null)
+      .map(() => buildCoffee({ type: CoffeeType.origin }));
+
+    coffeesService.getCoffees.and.returnValue(of(coffees));
+
+    fixture.detectChanges();
+    const element = fixture.debugElement.query(By.css('#origin-coffee'));
+
+    expect(element.nativeElement.textContent).toBe(totalCoffees.toString());
   });
 });

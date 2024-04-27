@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Coffee } from '../coffee';
+import { Coffee, CoffeeType } from '../coffee';
 import { CoffeesService } from '../coffees.service';
 
 @Component({
@@ -21,5 +21,17 @@ export class CoffeeListComponent implements OnInit {
     this.coffeesService.getCoffees().subscribe(coffees => {
       this.coffees = coffees;
     });
+  }
+
+  protected get countBlendCoffee() {
+    return this.countBy(CoffeeType.blend);
+  }
+
+  private countBy(type: CoffeeType) {
+    return this.coffees.filter(coffee => coffee.tipo === type).length;
+  }
+
+  protected get countOriginCoffee() {
+    return this.countBy(CoffeeType.origin);
   }
 }
