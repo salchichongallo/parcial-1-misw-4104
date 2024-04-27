@@ -21,10 +21,6 @@ describe('CoffeesService', () => {
     httpController = TestBed.inject(HttpTestingController);
   });
 
-  it('service should be defined', () => {
-    expect(service).toBeDefined();
-  });
-
   it('should not get coffees', () => {
     const EMPTY_COFFEES: Coffee[] = [];
     service.getCoffees().subscribe(coffees => expect(coffees).toEqual([]));
@@ -74,5 +70,19 @@ describe('CoffeesService', () => {
     testRequest.flush([coffee1, coffee2, coffee3]);
 
     httpController.verify();
+  });
+
+  it('should return an empty list if fails fetching coffees', done => {
+    service.getCoffees().subscribe({
+      next: coffees => {
+        expect(coffees).toEqual([]);
+        done();
+      },
+      error: () => fail('should have return an empty list of coffees'),
+    });
+
+    const testRequest = httpController.expectOne(service.coffeesUrl);
+
+    testRequest.error(new ProgressEvent('error'));
   });
 });
