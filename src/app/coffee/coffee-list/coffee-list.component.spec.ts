@@ -1,9 +1,9 @@
+import { By } from '@angular/platform-browser';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CoffeeListComponent } from './coffee-list.component';
 
 describe('CoffeeListComponent', () => {
-  let component: CoffeeListComponent;
   let fixture: ComponentFixture<CoffeeListComponent>;
 
   beforeEach(async () => {
@@ -14,11 +14,16 @@ describe('CoffeeListComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(CoffeeListComponent);
-    component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('should render header table', () => {
+    const [numeral, title, type, region] = fixture.debugElement.queryAll(
+      By.css('th'),
+    );
+    expect(numeral.nativeElement.textContent).toBe('#');
+    expect(title.nativeElement.textContent).toBe('Nombre');
+    expect(type.nativeElement.textContent).toBe('Tipo');
+    expect(region.nativeElement.textContent).toBe('Región');
   });
 });
