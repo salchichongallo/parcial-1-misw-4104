@@ -27,4 +27,35 @@ jobs:
         run: npm run test:ci
 
       - name: Build App
-        run: npm run build
+        env:
+          REPO_NAME: ${{ github.event.repository.name }}
+        run: npm build --deploy-url $REPO_NAME --output-path dist
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'dist/browser/'
+
+  deploy:
+    needs: build
+
+    runs-on: ubuntu-latest
+
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write # to deploy to Pages
+      id-token: write # to verify the deployment originates from an appropriate source
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: frontend-gh-pages
